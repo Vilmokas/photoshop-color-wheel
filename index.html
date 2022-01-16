@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vilmokas Color Wheel</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body style="background-color: #636363">
+    <canvas id="colorCanvas" width="230" height="230"></canvas>
+    <script src="CSInterface.js"></script>
+    <script>
+      var cs = new CSInterface();
+      var path = cs.getSystemPath(SystemPath.EXTENSION);
+
+      var fs = require("fs");
+      var list = fs.readdirSync(path);
+      alert(list.join("\n"));
+    </script>
+    <script src="./ColorPicker.js"></script>
+  </body>
+</html>
