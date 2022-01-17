@@ -8,15 +8,25 @@
   </head>
   <body style="background-color: #636363">
     <canvas id="colorCanvas" width="230" height="230"></canvas>
-    <script src="CSInterface.js"></script>
-    <script>
-      var cs = new CSInterface();
-      var path = cs.getSystemPath(SystemPath.EXTENSION);
 
-      var fs = require("fs");
-      var list = fs.readdirSync(path);
-      alert(list.join("\n"));
-    </script>
+    <input
+      id="currentColor"
+      name="currentColor"
+      minlength="6"
+      maxlength="6"
+      size="7"
+    />
+    <script src="./CSInterface.js"></script>
     <script src="./ColorPicker.js"></script>
+    <script>
+      const cs = new CSInterface();
+      const input = document.getElementById("currentColor");
+      input.addEventListener("change", updateValue);
+      function updateValue(e) {
+        let hex = e.target.value;
+        cs.evalScript(`app.foregroundColor.rgb.hexValue = '${hex}'`);
+        console.log("test");
+      }
+    </script>
   </body>
 </html>

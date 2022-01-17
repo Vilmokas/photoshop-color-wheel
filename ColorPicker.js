@@ -1,4 +1,5 @@
 const c = document.getElementById("colorCanvas");
+const currentColor = document.getElementById("currentColor");
 
 const wheelRadius = 100;
 const wheelWidth = 15;
@@ -80,12 +81,24 @@ function initColorPicker() {
     colorCurrent = color;
     console.log("%c" + color, "color:" + color);
 
+    currentColor.value = rgbToHex(rgba[0], rgba[1], rgba[2]);
+    currentColor.dispatchEvent(new Event("change"));
     let context = c.getContext("2d");
     context.clearRect(0, 0, c.width, c.height);
 
     initColorPicker();
     drawColorMarker();
   };
+}
+
+function componentToHex(c) {
+  var hex = c.toString(16);
+  return hex.length == 1 ? "0" + hex : hex;
+}
+
+function rgbToHex(r, g, b) {
+  let hex = componentToHex(r) + componentToHex(g) + componentToHex(b);
+  return hex.toUpperCase();
 }
 
 const drawColorMarker = () => {
