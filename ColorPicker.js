@@ -7,17 +7,13 @@ const center = { x: c.width / 2, y: c.height / 2 };
 
 const getX = (angle) => {
   return (
-    wheelRadius +
-    wheelWidth / 2 +
-    wheelRadius * Math.cos((angle * Math.PI) / 180)
+    wheelRadius + wheelWidth + wheelRadius * Math.cos((angle * Math.PI) / 180)
   );
 };
 
 const getY = (angle) => {
   return (
-    wheelRadius +
-    wheelWidth / 2 +
-    wheelRadius * Math.sin((angle * Math.PI) / 180)
+    wheelRadius + wheelWidth + wheelRadius * Math.sin((angle * Math.PI) / 180)
   );
 };
 
@@ -42,6 +38,7 @@ const angleSize = (Math.PI * 2) / sliceCount;
 
 let colorPos = { x: 0, y: 0 };
 let colorCurrent = "rgb(0, 0, 0)";
+let rgba = [0, 0, 0];
 
 function initColorPicker() {
   const path = c.getContext("2d");
@@ -51,6 +48,7 @@ function initColorPicker() {
 
   path.lineWidth = wheelWidth;
 
+  // Draw outer color wheel
   for (let i = 0; i < sliceCount; i++) {
     let start = sliceSize * i;
     let end = start + sliceSize;
@@ -70,13 +68,46 @@ function initColorPicker() {
     path.strokeStyle = gradiant;
     path.stroke();
   }
+  let ctx = c.getContext("2d");
+
+  // Draw triangle white and black color
+  ctx.beginPath();
+  ctx.moveTo(getX(0) - 18, getY(0));
+  ctx.lineTo(getX(120) + 9, getY(120) - 9);
+  ctx.lineTo(getX(240) + 9, getY(240) + 9);
+  let grdBlack = ctx.createLinearGradient(
+    getX(120) + 9,
+    getY(120) - 9,
+    getX(240) + 9,
+    getY(240) + 9
+  );
+  grdBlack.addColorStop(0, "rgba(0,0,0,1)");
+  grdBlack.addColorStop(1, "rgba(255,255,255,1)");
+  ctx.fillStyle = grdBlack;
+  ctx.fill();
+
+  // Draw triangle base color
+  ctx.beginPath();
+  ctx.moveTo(getX(0) - 18, getY(0));
+  ctx.lineTo(getX(120) + 9, getY(120) - 9);
+  ctx.lineTo(getX(240) + 9, getY(240) + 9);
+  let grdBase = ctx.createLinearGradient(
+    getX(0) - 18,
+    getY(0),
+    getX(0) - 140,
+    getY(0)
+  );
+  grdBase.addColorStop(0, `rgba(${rgba[0]},${rgba[1]},${rgba[2]},1)`);
+  grdBase.addColorStop(1, `rgba(${rgba[0]},${rgba[1]},${rgba[2]},0)`);
+  ctx.fillStyle = grdBase;
+  ctx.fill();
 
   c.onclick = function (e) {
     colorPos.x = (e.offsetX / c.clientWidth) * c.width;
     colorPos.y = (e.offsetY / c.clientHeight) * c.height;
 
     let imgData = path.getImageData(colorPos.x, colorPos.y, 1, 1);
-    let rgba = imgData.data;
+    rgba = imgData.data;
     let color = "rgb(" + rgba[0] + ", " + rgba[1] + ", " + rgba[2] + ")";
     colorCurrent = color;
     console.log("%c" + color, "color:" + color);
