@@ -17,6 +17,10 @@ const getY = (angle) => {
   );
 };
 
+let circle = false;
+let triangle = false;
+let isSelectingColor = false;
+
 const sliceCount = 12;
 const sliceColors = [
   "#FF0000", // red
@@ -129,7 +133,9 @@ const drawColorWheel = () => {
 function initColorPicker() {
   drawColorWheel();
 
-  c.onclick = function (e) {
+  c.addEventListener("mousedown", (e) => {
+    isSelectingColor = true;
+
     drawColorWheel();
     let colorPos = { x: 0, y: 0 };
     colorPos.x = (e.offsetX / c.clientWidth) * c.width;
@@ -137,6 +143,7 @@ function initColorPicker() {
 
     // Change the main color (outer ring)
     if (isInsideRing(colorPos.x, colorPos.y, wheelRadius, wheelWidth)) {
+      circle = true;
       mainColorPos.x = colorPos.x;
       mainColorPos.y = colorPos.y;
       let imgData = path.getImageData(
@@ -157,23 +164,78 @@ function initColorPicker() {
         { x: getX(240) + 9, y: getY(240) + 9 }
       )
     ) {
+      triangle = true;
       secondColorPos.x = colorPos.x;
       secondColorPos.y = colorPos.y;
     }
 
     drawColorWheel();
 
-    console.log(`x: ${secondColorPos.x}, y: ${secondColorPos.y}`);
     let imgData = path.getImageData(secondColorPos.x, secondColorPos.y, 1, 1);
     rgba = imgData.data;
 
-    console.log(rgbToHex(rgba[0], rgba[1], rgba[2]));
     currentColor.value = rgbToHex(rgba[0], rgba[1], rgba[2]);
     currentColor.dispatchEvent(new Event("change"));
 
     // Draw markers at the end to avoid detecting their color when picking colors
     drawColorMarker();
-  };
+  });
+
+  c.addEventListener("mousemove", (e) => {
+    if (isSelectingColor) {
+      drawColorWheel();
+      let colorPos = { x: 0, y: 0 };
+      colorPos.x = (e.offsetX / c.clientWidth) * c.width;
+      colorPos.y = (e.offsetY / c.clientHeight) * c.height;
+
+      // Change the main color (outer ring)
+      if (
+        isInsideRing(colorPos.x, colorPos.y, wheelRadius, wheelWidth) &&
+        circle
+      ) {
+        mainColorPos.x = colorPos.x;
+        mainColorPos.y = colorPos.y;
+        let imgData = path.getImageData(
+          mainColorPos.x,
+          mainColorPos.y,
+          1,
+          1
+        ).data;
+        mainColor = [imgData[0], imgData[1], imgData[2]];
+      }
+
+      // Change the 2nd color (triangle)
+      if (
+        isInsideTriangle(
+          colorPos,
+          { x: getX(0) - 18, y: getY(0) },
+          { x: getX(120) + 9, y: getY(120) - 9 },
+          { x: getX(240) + 9, y: getY(240) + 9 }
+        ) &&
+        triangle
+      ) {
+        secondColorPos.x = colorPos.x;
+        secondColorPos.y = colorPos.y;
+      }
+
+      drawColorWheel();
+
+      let imgData = path.getImageData(secondColorPos.x, secondColorPos.y, 1, 1);
+      rgba = imgData.data;
+
+      currentColor.value = rgbToHex(rgba[0], rgba[1], rgba[2]);
+      currentColor.dispatchEvent(new Event("change"));
+
+      // Draw markers at the end to avoid detecting their color when picking colors
+      drawColorMarker();
+    }
+  });
+
+  window.addEventListener("mouseup", (e) => {
+    isSelectingColor = false;
+    circle = false;
+    triangle = false;
+  });
 }
 
 const isInsideRing = (x, y, r, w) => {
