@@ -1,7 +1,49 @@
+body {
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Safari */
+  -khtml-user-select: none; /* Konqueror HTML */
+  -moz-user-select: none; /* Old versions of Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+  user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Edge, Opera and Firefox */
+}
+
 canvas {
   padding-left: 0;
   padding-right: 0;
   margin-left: auto;
   margin-right: auto;
   display: block;
+}
+
+#foregroundColor {
+  background-color: black;
+  width: 40px;
+  height: 20px;
+  margin-top: 12px;
+  border: 1px solid rgb(255, 255, 255);
+  box-shadow: -1px 0 #454545, 0 1px #454545, 1px 0 #454545, 0 -1px #454545;
+}
+
+input {
+  padding: 0;
+  border: 1px solid #666;
+  border-style: solid;
+  line-height: 20px;
+  background-color: #454545;
+  color: white;
+  font-size: 10px;
+  padding-left: 5px;
+  width: 45px;
+}
+
+#output {
+  height: 26px;
+  display: inline-block;
+  margin-left: 95px;
+}
+
+#data {
+  display: flex;
+  align-items: center;
 }

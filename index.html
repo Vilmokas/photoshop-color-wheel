@@ -6,26 +6,32 @@
     <title>Vilmokas Color Wheel</title>
     <link rel="stylesheet" href="styles.css" />
   </head>
-  <body style="background-color: #636363">
+  <body style="background-color: #535353">
     <canvas id="colorCanvas" width="230" height="230"></canvas>
+    <div id="#data">
+      <div id="output">
+        <div id="foregroundColor"></div>
+      </div>
+      <input
+        id="currentColor"
+        name="currentColor"
+        minlength="6"
+        maxlength="6"
+        size="6"
+      />
+    </div>
 
-    <input
-      id="currentColor"
-      name="currentColor"
-      minlength="6"
-      maxlength="6"
-      size="7"
-    />
     <script src="./CSInterface.js"></script>
     <script src="./ColorPicker.js"></script>
     <script>
       const cs = new CSInterface();
       const input = document.getElementById("currentColor");
+      const output = document.getElementById("foregroundColor");
       input.addEventListener("change", updateValue);
       function updateValue(e) {
         let hex = e.target.value;
         cs.evalScript(`app.foregroundColor.rgb.hexValue = '${hex}'`);
-        console.log("test");
+        output.style.backgroundColor = `#${hex}`;
       }
     </script>
   </body>
