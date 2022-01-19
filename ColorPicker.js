@@ -17,6 +17,10 @@ const getY = (angle) => {
   );
 };
 
+const getAngle = (x, y) => {
+  return ((Math.atan2(y - center.y, x - center.x) / Math.PI) * 180 + 360) % 360;
+};
+
 let circle = false;
 let triangle = false;
 let isSelectingColor = false;
@@ -144,8 +148,9 @@ function initColorPicker() {
     // Change the main color (outer ring)
     if (isInsideRing(colorPos.x, colorPos.y, wheelRadius, wheelWidth)) {
       circle = true;
-      mainColorPos.x = colorPos.x;
-      mainColorPos.y = colorPos.y;
+      let angle = getAngle(colorPos.x, colorPos.y);
+      mainColorPos.x = getX(angle);
+      mainColorPos.y = getY(angle);
       let imgData = path.getImageData(
         mainColorPos.x,
         mainColorPos.y,
@@ -181,20 +186,17 @@ function initColorPicker() {
     drawColorMarker();
   });
 
-  c.addEventListener("mousemove", (e) => {
+  window.addEventListener("mousemove", (e) => {
     if (isSelectingColor) {
       drawColorWheel();
       let colorPos = { x: 0, y: 0 };
       colorPos.x = (e.offsetX / c.clientWidth) * c.width;
       colorPos.y = (e.offsetY / c.clientHeight) * c.height;
-
       // Change the main color (outer ring)
-      if (
-        isInsideRing(colorPos.x, colorPos.y, wheelRadius, wheelWidth) &&
-        circle
-      ) {
-        mainColorPos.x = colorPos.x;
-        mainColorPos.y = colorPos.y;
+      if (circle) {
+        let angle = getAngle(colorPos.x, colorPos.y);
+        mainColorPos.x = getX(angle);
+        mainColorPos.y = getY(angle);
         let imgData = path.getImageData(
           mainColorPos.x,
           mainColorPos.y,
