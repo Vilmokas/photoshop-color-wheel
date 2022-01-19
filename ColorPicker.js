@@ -279,13 +279,25 @@ const drawColorMarker = () => {
   let ctx = c.getContext("2d");
   ctx.beginPath();
   ctx.arc(mainColorPos.x, mainColorPos.y, 7, 0, 2 * Math.PI);
-  ctx.strokeStyle = "black";
+  ctx.strokeStyle = "#454545";
   ctx.lineWidth = 2;
   ctx.stroke();
 
   //Draw triangle marker
   ctx.beginPath();
-  ctx.arc(secondColorPos.x, secondColorPos.y, 7, 0, 2 * Math.PI);
+  ctx.arc(secondColorPos.x, secondColorPos.y, 5, 0, 2 * Math.PI);
+  ctx.stroke();
+
+  // Draw circle marker inside
+  ctx.beginPath();
+  ctx.arc(mainColorPos.x, mainColorPos.y, 6, 0, 2 * Math.PI);
+  ctx.strokeStyle = "#ffffff";
+  ctx.lineWidth = 1;
+  ctx.stroke();
+
+  // Draw triangle marker inside
+  ctx.beginPath();
+  ctx.arc(secondColorPos.x, secondColorPos.y, 4, 0, 2 * Math.PI);
   ctx.stroke();
 };
 
